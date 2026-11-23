@@ -186,6 +186,7 @@
       <header class="sheet-header"><h2 id="more-title">More</h2><button type="button" aria-label="Close more controls" data-close-dialog autofocus><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></header>
       <div class="player-actions">
         <button type="button" id="open-link" aria-haspopup="dialog" aria-controls="link-dialog"><svg class="icon" aria-hidden="true"><use href="#i-link"/></svg>Open link</button>
+        <button type="button" id="open-discover" aria-haspopup="dialog" aria-controls="discover-dialog"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Search movies &amp; TV</button>
         <button type="button" id="bookmark-page" data-cmd="bookmark_current" title="Save the exact webpage open on the TV" disabled><svg class="icon" aria-hidden="true"><use href="#i-bookmark"/></svg>Bookmark page</button>
         <button type="button" id="reload-page" data-cmd="site_reload" disabled><svg class="icon" aria-hidden="true"><use href="#i-reload"/></svg>Reload page</button>
         <button type="button" id="open-zoom" aria-haspopup="dialog" aria-controls="zoom-dialog" hidden><svg class="icon" aria-hidden="true"><use href="#i-zoom"/></svg>Zoom</button>
@@ -234,6 +235,14 @@
       <div class="dialog-actions"><button type="button" data-close-dialog>Cancel</button><button class="primary" type="submit">Open on TV</button></div>
     </form>
   </dialog>
+  <dialog id="discover-dialog" aria-labelledby="discover-dialog-title">
+    <form>
+      <h2 id="discover-dialog-title">Search movies &amp; TV</h2>
+      <label>Title or website<input id="remote-discover-query" type="search" autocomplete="off" maxlength="100" enterkeyhint="search" placeholder="e.g. Interstellar 2014" required autofocus></label>
+      <p id="remote-discover-error" role="alert" hidden></p>
+      <div class="dialog-actions"><button type="button" data-close-dialog>Cancel</button><button class="primary" type="submit">Search on TV</button></div>
+    </form>
+  </dialog>
   <dialog id="typing" aria-labelledby="typing-title">
     <form method="dialog">
       <h2 id="typing-title">TV keyboard</h2>
@@ -270,6 +279,6 @@
 
   <script src="/smarttv-remote/hosted-4cbecf3edb33fba5.js"></script>
   <script src="/smarttv-remote/remote/assets/16a0f88554396a8f/touchpad.js"></script>
-  <script src="/smarttv-remote/remote/assets/575336a157d8beb1/remote.js"></script>
+  <script src="/smarttv-remote/remote/assets/96e8fa7fbcafc7b1/remote.js"></script>
 </body>
 </html>
