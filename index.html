@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="crimson">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -13,6 +13,7 @@
   <link rel="apple-touch-icon" href="/smarttv-remote/static/art/smarttv-192.png">
   <link rel="manifest" href="/smarttv-remote/manifest.webmanifest">
   <link rel="stylesheet" href="/smarttv-remote/remote/assets/fbc0c5c5efb4207f/handset.css">
+  <link rel="stylesheet" href="/smarttv-remote/remote/assets/d07bec01e3b07ac6/themes.css">
   <meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src http: 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'">
   <style>
     .handset { --gap: .625rem; --top: max(.5rem, env(safe-area-inset-top)); --bottom: max(.75rem, env(safe-area-inset-bottom)); padding: var(--top) max(.75rem, env(safe-area-inset-right)) var(--bottom) max(.75rem, env(safe-area-inset-left)); }
@@ -35,7 +36,7 @@
     .nav-input > :is(.dpad, #touchpad-surface) { grid-area: 1 / 1; transition: none; }
     .dpad { width: min(100%, 21rem); aspect-ratio: auto; grid-template: 5rem 6.25rem 5rem / 1fr 6.25rem 1fr; gap: var(--gap); }
     .handset .dpad button:active { transform: none; }
-    .handset .dpad [data-key], .handset .dpad [data-key]:active { width: 5rem; height: 5rem; touch-action: manipulation; box-shadow: none; background: linear-gradient(var(--red), #5c0011); }
+    .handset .dpad [data-key], .handset .dpad [data-key]:active { width: 5rem; height: 5rem; touch-action: manipulation; box-shadow: none; background: linear-gradient(var(--red), var(--arrow-end, #5c0011)); }
     .handset .dpad .ok-key { width: 6.25rem; height: 6.25rem; box-shadow: none; }
     .dpad [data-key="left"] { justify-self: end; }
     .dpad [data-key="right"] { justify-self: start; }
@@ -269,6 +270,6 @@
 
   <script src="/smarttv-remote/hosted-4cbecf3edb33fba5.js"></script>
   <script src="/smarttv-remote/remote/assets/16a0f88554396a8f/touchpad.js"></script>
-  <script src="/smarttv-remote/remote/assets/16a8e63e0b20bbfe/remote.js"></script>
+  <script src="/smarttv-remote/remote/assets/575336a157d8beb1/remote.js"></script>
 </body>
 </html>

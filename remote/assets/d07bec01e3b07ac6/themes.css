@@ -1,0 +1,29 @@
+/* Shared dark palettes for the TV launcher, player chrome, and phone. */
+:root[data-theme="ocean"] { --theme-light:#8cbaff; --theme-color:#204a98; --theme-deep:#0b234d; --theme-tint:#111d32; }
+:root[data-theme="forest"] { --theme-light:#91e7ab; --theme-color:#21683b; --theme-deep:#103b23; --theme-tint:#10261b; }
+:root[data-theme="violet"] { --theme-light:#d8b6ff; --theme-color:#64369a; --theme-deep:#381b58; --theme-tint:#23172e; }
+:root[data-theme="amber"] { --theme-light:#ffdc8c; --theme-color:#815514; --theme-deep:#4b2c08; --theme-tint:#2a200e; }
+:root[data-theme="glacier"] { --theme-light:#b1eaff; --theme-color:#265f81; --theme-deep:#16374e; --theme-tint:#142631; }
+:root[data-theme="copper"] { --theme-light:#ffb997; --theme-color:#89452d; --theme-deep:#532517; --theme-tint:#2c1c16; }
+:root[data-theme="rosewood"] { --theme-light:#ffa9d4; --theme-color:#803757; --theme-deep:#4b2036; --theme-tint:#2b1924; }
+:root[data-theme="teal"] { --theme-light:#75efd9; --theme-color:#19685f; --theme-deep:#103b36; --theme-tint:#102725; }
+:root[data-theme="mono"] { --theme-light:#e2e6ef; --theme-color:#4f5661; --theme-deep:#292e38; --theme-tint:#202228; }
+
+:root[data-theme]:not([data-theme="crimson"]) {
+  --bg-soft: color-mix(in srgb, var(--theme-tint) 35%, #000);
+  --panel: var(--theme-tint);
+  --glass: color-mix(in srgb, var(--theme-tint) 94%, transparent);
+  --surface-raised: color-mix(in srgb, var(--theme-tint) 85%, #fff);
+  --line: color-mix(in srgb, var(--theme-tint) 72%, #fff);
+  --blood: var(--theme-color);
+  --accent: var(--theme-light);
+  --focus: var(--theme-light);
+  --art-color: var(--theme-deep);
+  --deck: var(--theme-tint);
+  --key: color-mix(in srgb, var(--theme-tint) 96%, #fff);
+  --raised: var(--surface-raised);
+  --red: var(--theme-color);
+  --arrow-end: var(--theme-deep);
+  --rose: var(--theme-light);
+  --active: var(--theme-deep);
+}
