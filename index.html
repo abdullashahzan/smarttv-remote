@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="smartTV">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="smartTV">
+  <link rel="icon" href="/smarttv-remote/static/art/smarttv.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/smarttv-remote/static/art/smarttv-192.png">
+  <link rel="manifest" href="/smarttv-remote/manifest.webmanifest">
+  <link rel="stylesheet" href="/smarttv-remote/remote/assets/fbc0c5c5efb4207f/handset.css">
+  <meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src http: 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'">
+  <style>
+    .handset { --gap: .625rem; --top: max(.5rem, env(safe-area-inset-top)); --bottom: max(.75rem, env(safe-area-inset-bottom)); padding: var(--top) max(.75rem, env(safe-area-inset-right)) var(--bottom) max(.75rem, env(safe-area-inset-left)); }
+    .handset button { min-height: 3.5rem; min-width: 3.5rem; user-select: none; -webkit-touch-callout: none; transition: scale 100ms ease-out, filter 100ms ease-out; }
+    .handset button:active:not(:disabled) { scale: .96; filter: brightness(1.12); }
+    .handset-header { min-height: 2rem; padding-block-end: .25rem; margin-block-end: var(--gap); }
+    .app-brand img { width: 1.5rem; height: 1.5rem; }
+    #remote-status[data-state="connected"]::before { background: currentColor; box-shadow: none; }
+    #remote-panel, .nav-deck, .controls { gap: var(--gap); }
+    #sites { gap: var(--gap); padding: 0; }
+    #sites .site-tile { flex-basis: 4.5rem; min-height: 4.5rem; grid-template-rows: 1fr auto; align-items: center; gap: .125rem; padding: .25rem; border: 1px solid var(--line); background: var(--key); }
+    .site-icon { width: 2.5rem; border: 0; background: none; }
+    #sites #add-site { border-style: dashed; }
+    #add-site .site-icon { background: none; }
+    .input-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+    .input-modes:has(#cursor-mode:not([hidden])) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .input-modes button { border-radius: .875rem; }
+    .nav-input { margin: 0; min-height: calc(16.25rem + 2 * var(--gap)); align-items: stretch; }
+    .nav-input::before { content: none; }
+    .nav-input > :is(.dpad, #touchpad-surface) { grid-area: 1 / 1; transition: none; }
+    .dpad { width: min(100%, 21rem); aspect-ratio: auto; grid-template: 5rem 6.25rem 5rem / 1fr 6.25rem 1fr; gap: var(--gap); }
+    .handset .dpad button:active { transform: none; }
+    .handset .dpad [data-key], .handset .dpad [data-key]:active { width: 5rem; height: 5rem; touch-action: manipulation; box-shadow: none; background: linear-gradient(var(--red), #5c0011); }
+    .handset .dpad .ok-key { width: 6.25rem; height: 6.25rem; box-shadow: none; }
+    .dpad [data-key="left"] { justify-self: end; }
+    .dpad [data-key="right"] { justify-self: start; }
+    #touchpad-surface { background: var(--deck); }
+    .control-row { gap: var(--gap); }
+    .handset .control-row .key { min-height: 3.5rem; }
+    .remote-top, .volume-controls { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .handset .remote-top .key { min-height: 4rem; }
+    .transport-row { grid-template-columns: repeat(2, minmax(3.5rem, 1fr)) minmax(4.5rem, 1.65fr) repeat(2, minmax(3.5rem, 1fr)); align-items: center; }
+    .handset #play, .handset .volume-controls button { min-height: clamp(3.5rem, calc((100dvh - var(--top) - var(--bottom) - 41rem) / 2), 4.5rem); }
+    .volume-controls { display: grid; gap: var(--gap); }
+    .volume-controls button { flex-direction: column; gap: .125rem; font-size: .75rem; }
+    #volume-level { display: block; margin-block-end: .125rem; color: var(--muted); font-size: .75rem; text-align: center; font-variant-numeric: tabular-nums; }
+    .handset #more-sheet { inset: auto 0 0; width: min(100%, var(--width)); max-height: min(85dvh, calc(100dvh - env(safe-area-inset-top))); padding: .75rem max(.75rem, env(safe-area-inset-right)) max(.75rem, env(safe-area-inset-bottom)) max(.75rem, env(safe-area-inset-left)); border-radius: 1.25rem 1.25rem 0 0; overscroll-behavior: contain; }
+    #more-sheet[open] { animation: sheet-in var(--fade-in) ease-out; }
+    @keyframes sheet-in { from { transform: translateY(100%); } }
+    .sheet-header { display: flex; align-items: center; justify-content: space-between; gap: var(--gap); margin-block-end: var(--gap); }
+    .player-actions, .dialog-actions, .zoom-steps { gap: var(--gap); }
+    .player-actions button { padding: .375rem; }
+    .player-actions [aria-pressed]::after { content: 'Off'; color: var(--muted); }
+    .player-actions [aria-pressed="true"]::after { content: 'On'; color: var(--rose); }
+    .sheet-info { display: grid; gap: var(--gap); margin-block-start: var(--gap); }
+    .sheet-network { display: flex; align-items: center; justify-content: space-between; gap: var(--gap); }
+    #remote-url { text-align: start; }
+    .handset #seek { height: 3.5rem; }
+    .zoom-steps { grid-template-columns: 3.5rem minmax(0, 1fr) 3.5rem; }
+    .handset input:not([type="range"]) { min-height: 3.5rem; }
+    #install-steps { display: grid; gap: .375rem; margin: 0; padding-inline-start: 1.25rem; color: var(--muted); font-size: .8125rem; line-height: 1.4; }
+    #install-steps:empty { display: none; }
+    #install-dialog .dialog-actions { grid-template-columns: minmax(0, 1fr); }
+    @media (max-width: 344px) { .transport-row { gap: .625rem; margin-inline: -.375rem; } }
+    @media (max-width: 320px) { .transport-row { overflow-x: auto; } }
+    @media (orientation: landscape) and (min-width: 560px) and (max-height: 540px) { #open-more { grid-area: more; } }
+    @media (prefers-reduced-motion: reduce) { .handset button { transition: none; } }
+  </style>
+  <title>smartTV Remote</title>
+</head>
+<body class="remote-body handset">
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14m-7-7v14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3Zm12 0a4 4 0 0 1 0 6m2-9a8 8 0 0 1 0 12"/></symbol>
+    <symbol id="i-muted" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3Zm13 0 6 6m0-6-6 6"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m10 6-6 6 6 6m-6-6h16"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10H3Zm6 10v-6h6v6"/></symbol>
+    <symbol id="i-pad" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 15h18m-9 0v5"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="m10 13 4-4m-6 7-1 1a3.5 3.5 0 0 1-5-5l4-4a3.5 3.5 0 0 1 5 0m2 8a3.5 3.5 0 0 0 5 0l4-4a3.5 3.5 0 0 0-5-5l-1 1"/></symbol>
+    <symbol id="i-reload" viewBox="0 0 24 24"><path d="M20 4v6h-6m6 0a8 8 0 1 0 0 5"/></symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 4h12v16l-6-4-6 4z"/></symbol>
+    <symbol id="i-ring" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="M5 6v12m14-13L9 12l10 7z"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="M19 6v12M5 5l10 7-10 7z"/></symbol>
+    <symbol id="i-rewind" viewBox="0 0 24 24"><path d="M4 5v6h6m-6 0a8 8 0 1 1 6 9"/></symbol>
+    <symbol id="i-forward" viewBox="0 0 24 24"><path d="M20 5v6h-6m6 0a8 8 0 1 0-6 9"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z" fill="currentColor"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 5v14m6-14v14" stroke-width="3"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.5"/><path d="m15 15 5 5"/></symbol>
+    <symbol id="i-zoom" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.5"/><path d="m15 15 5 5M8 10.5h5m-2.5-2.5v5"/></symbol>
+    <symbol id="i-full" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5m0 6v5h-5m-6 0H4v-5"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-tv" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="3"/><path d="M8 21h8m-4-4v4"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><path d="M5 12h.01m7 0h.01m7 0h.01" stroke-width="3"/></symbol>
+    <symbol id="i-skip" viewBox="0 0 24 24"><path d="m4 6 10 6-10 6zm15 0v12"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 7v5c0 4 4 7 8 9 4-2 8-5 8-9V7Z"/><path d="m9 9 6 6m0-6-6 6"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v9m-5-6a8 8 0 1 0 10 0"/></symbol>
+    <symbol id="i-install" viewBox="0 0 24 24"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 20h14"/></symbol>
+  </svg>
+  <header class="handset-header">
+    <span class="app-brand"><img src="/smarttv-remote/static/art/smarttv.svg" width="32" height="32" alt=""><span>smart<strong>TV</strong></span></span>
+
+    <div class="handset-connection">
+      <span id="remote-status" role="status">Connecting</span>
+    </div>
+  </header>
+  <p id="notice" role="status" hidden></p>
+
+  <div class="handset-content">
+  <section id="pair-panel" class="remote-panel hidden" aria-labelledby="pair-title" inert>
+    <span class="pair-icon"><svg class="icon" aria-hidden="true"><use href="#i-tv"/></svg></span>
+    <h1 id="pair-title">Connect to TV</h1>
+    <p id="pair-copy">Use the same Wi-Fi as your TV. Allow local network access if Chrome asks.</p>
+    <form id="pair-form">
+      <button class="primary" type="submit">Connect to TV</button>
+    </form>
+    <button type="button" id="install-unpaired" aria-haspopup="dialog" aria-controls="install-dialog" hidden>Install app</button>
+  </section>
+
+  <main id="remote-panel" class="remote-panel hidden" inert>
+    <section class="quick-launch" aria-label="Quick launch">
+      <div id="sites">
+        <button class="site-tile" id="add-site" type="button" aria-label="Add site"><span class="site-icon"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></span><span class="site-name">Add site</span></button>
+      </div>
+    </section>
+
+    <section class="nav-deck" aria-label="Navigation">
+      <div class="input-modes" role="group" aria-label="Navigation modes">
+        <button type="button" id="open-buttons" aria-controls="remote-dpad" aria-pressed="true">Buttons</button>
+        <button type="button" id="open-touchpad" aria-controls="touchpad-surface" aria-expanded="false" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-pad"/></svg>Touchpad</button>
+        <button type="button" id="cursor-mode" aria-controls="remote-dpad" aria-pressed="false" hidden>Cursor</button>
+      </div>
+      <div class="nav-input">
+        <div class="dpad" id="remote-dpad" role="group" aria-label="Directional navigation">
+          <button data-command="up" data-key="up" aria-label="Up"><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg></button>
+          <button data-command="left" data-key="left" aria-label="Left"><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg></button>
+          <button data-command="ok" class="ok-key" aria-label="OK">OK</button>
+          <button data-command="right" data-key="right" aria-label="Right"><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></button>
+          <button data-command="down" data-key="down" aria-label="Down"><svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></button>
+        </div>
+        <div id="touchpad-surface" role="region" aria-label="Touchpad: swipe to move, tap to click, and scroll with two fingers" hidden>
+          <div class="touchpad-hint" aria-hidden="true"><svg class="icon"><use href="#i-pad"/></svg><strong>Touchpad</strong><span>Swipe to move · Tap to click</span><span>Two fingers to scroll</span></div>
+        </div>
+      </div>
+      <div class="remote-top control-row" role="group" aria-label="Quick controls">
+        <button class="key" type="button" id="back"><svg class="icon" aria-hidden="true"><use href="#i-back"/></svg><span>Back</span></button>
+        <button class="key" data-cmd="home"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg><span>Home</span></button>
+        <button class="key" data-cmd="fullscreen"><svg class="icon" aria-hidden="true"><use href="#i-full"/></svg><span>Full screen</span></button>
+      </div>
+    </section>
+
+    <section class="controls" aria-label="Playback">
+      <div class="transport-row control-row" role="group" aria-label="Transport">
+        <button class="key" data-cmd="previous" aria-label="Previous video"><svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg></button>
+        <button class="key" data-skip="-10" aria-label="Back ten seconds"><svg class="icon" aria-hidden="true"><use href="#i-rewind"/></svg><span>−10s</span></button>
+        <button class="key primary" data-cmd="play_pause" id="play"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg><span>Play</span></button>
+        <button class="key" data-skip="10" aria-label="Forward ten seconds"><svg class="icon" aria-hidden="true"><use href="#i-forward"/></svg><span>+10s</span></button>
+        <button class="key" data-cmd="next" aria-label="Next video"><svg class="icon" aria-hidden="true"><use href="#i-next"/></svg></button>
+      </div>
+      <div class="sound-row" role="group" aria-label="Volume">
+        <span id="volume-level" aria-live="polite">Volume</span>
+        <div class="volume-controls">
+          <button data-volume="-1" aria-label="Volume down"><svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg><span>Vol down</span></button>
+          <button class="key" id="mute" type="button" data-cmd="mute" aria-label="Mute" aria-pressed="false" title="Mute" disabled><svg class="icon" aria-hidden="true"><use href="#i-volume"/></svg><span>Mute</span></button>
+          <button data-volume="1" aria-label="Volume up"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg><span>Vol up</span></button>
+        </div>
+      </div>
+    </section>
+    <button type="button" id="open-more" aria-haspopup="dialog" aria-controls="more-sheet"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg>More</button>
+  </main>
+  </div>
+
+  <dialog id="more-sheet" aria-labelledby="more-title">
+      <header class="sheet-header"><h2 id="more-title">More</h2><button type="button" aria-label="Close more controls" data-close-dialog autofocus><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></header>
+      <div class="player-actions">
+        <button type="button" id="open-link" aria-haspopup="dialog" aria-controls="link-dialog"><svg class="icon" aria-hidden="true"><use href="#i-link"/></svg>Open link</button>
+        <button type="button" id="bookmark-page" data-cmd="bookmark_current" title="Save the exact webpage open on the TV" disabled><svg class="icon" aria-hidden="true"><use href="#i-bookmark"/></svg>Bookmark page</button>
+        <button type="button" id="reload-page" data-cmd="site_reload" disabled><svg class="icon" aria-hidden="true"><use href="#i-reload"/></svg>Reload page</button>
+        <button type="button" id="open-zoom" aria-haspopup="dialog" aria-controls="zoom-dialog" hidden><svg class="icon" aria-hidden="true"><use href="#i-zoom"/></svg>Zoom</button>
+        <button type="button" id="ring" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-ring"/></svg>Focus ring</button>
+        <button id="auto-skip" type="button" aria-pressed="false" hidden><svg class="icon" aria-hidden="true"><use href="#i-skip"/></svg>Auto-skip ads</button>
+        <button id="adblock" type="button" aria-pressed="false" hidden><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>Disable ad blocker</button>
+        <button type="button" id="m3u-search" aria-haspopup="dialog" aria-controls="m3u-search-dialog" hidden><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Search channels</button>
+        <button type="button" id="install-app" aria-haspopup="dialog" aria-controls="install-dialog" hidden><svg class="icon" aria-hidden="true"><use href="#i-install"/></svg>Install app</button>
+        <div class="service-actions" id="service-actions" hidden>
+          <button type="button" id="restart-service" aria-haspopup="dialog" aria-controls="restart-dialog" disabled><svg class="icon" aria-hidden="true"><use href="#i-power"/></svg>Restart service</button>
+        </div>
+      </div>
+      <div class="sheet-info">
+        <label>Seek<input id="seek" type="range" min="0" max="1000" value="0" aria-label="Playback position"></label>
+        <div class="sheet-network" aria-label="Connection details"><span id="remote-url"></span><span id="remote-latency" title="Phone-to-TV round-trip time" hidden></span></div>
+      </div>
+  </dialog>
+
+  <dialog id="install-dialog" aria-labelledby="install-title" data-https-port="0">
+    <form method="dialog">
+      <h2 id="install-title">Install smartTV</h2>
+      <p id="install-copy">Install the remote as an app for a full-screen control panel.</p>
+      <ol id="install-steps"></ol>
+      <div class="dialog-actions">
+        <button type="button" id="install-open" hidden>Open secure remote</button>
+        <button class="primary" value="close">Done</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="add-site-dialog" aria-labelledby="site-dialog-title">
+    <form id="add-site-form">
+      <h2 id="site-dialog-title">Add site</h2>
+      <label>Site name<input name="name" maxlength="100" placeholder="Optional"></label>
+      <label>Website address<input name="url" type="url" inputmode="url" placeholder="https://example.com" required></label>
+      <div class="dialog-actions"><button id="cancel-add-site" type="button">Cancel</button><button class="primary" type="submit">Add site</button></div>
+      <button type="button" id="remove-site" hidden>Remove site</button>
+    </form>
+  </dialog>
+  <dialog id="link-dialog" aria-labelledby="link-dialog-title">
+    <form id="link-form">
+      <h2 id="link-dialog-title">Open link on TV</h2>
+      <label>Paste a website link<input id="link-url" type="url" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="2000" enterkeyhint="go" placeholder="https://example.com" required autofocus></label>
+      <p id="link-error" role="alert" hidden></p>
+      <div class="dialog-actions"><button type="button" data-close-dialog>Cancel</button><button class="primary" type="submit">Open on TV</button></div>
+    </form>
+  </dialog>
+  <dialog id="typing" aria-labelledby="typing-title">
+    <form method="dialog">
+      <h2 id="typing-title">TV keyboard</h2>
+      <label>Text to send<input id="text" placeholder="Type here" autocomplete="off" maxlength="2000" enterkeyhint="send"></label>
+      <div class="dialog-actions"><button type="button" data-close-dialog>Cancel</button><button class="primary">Send to TV</button></div>
+    </form>
+  </dialog>
+  <dialog id="zoom-dialog" aria-labelledby="zoom-title">
+    <form method="dialog">
+      <h2 id="zoom-title">Website zoom</h2>
+      <div class="zoom-steps" role="group" aria-label="Page zoom">
+        <button id="zoom-out" type="button" aria-label="Zoom out" autofocus><svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg></button>
+        <output id="zoom-level" aria-live="polite">100%</output>
+        <button id="zoom-in" type="button" aria-label="Zoom in"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+      </div>
+      <div class="dialog-actions"><button id="zoom-reset" type="button">Reset to 100%</button><button class="primary" type="submit">Done</button></div>
+    </form>
+  </dialog>
+  <dialog id="m3u-search-dialog" aria-labelledby="m3u-search-title">
+    <form method="dialog">
+      <h2 id="m3u-search-title">Search channels</h2>
+      <label>Channel name<input id="m3u-query" type="search" maxlength="100" autocomplete="off" enterkeyhint="search" autofocus></label>
+      <p>Use the D-pad and OK to choose a match on the TV.</p>
+      <div class="dialog-actions"><button class="primary" type="submit" value="search">Search</button><button type="submit" value="clear" formnovalidate>Clear search</button></div>
+    </form>
+  </dialog>
+  <dialog id="restart-dialog" aria-labelledby="restart-title" aria-describedby="restart-description">
+    <form id="restart-form">
+      <h2 id="restart-title">Restart service?</h2>
+      <p id="restart-description">Playback stops while smartTV checks GitHub and installs any available update. Remotes reconnect automatically, and server logs stay off.</p>
+      <div class="dialog-actions"><button type="button" data-close-dialog autofocus>Cancel</button><button class="primary" type="submit">Restart service</button></div>
+    </form>
+  </dialog>
+
+  <script src="/smarttv-remote/hosted-55b809de5e47e24d.js"></script>
+  <script src="/smarttv-remote/remote/assets/16a0f88554396a8f/touchpad.js"></script>
+  <script src="/smarttv-remote/remote/assets/f9c4a0f6eb221131/remote.js"></script>
+</body>
+</html>
