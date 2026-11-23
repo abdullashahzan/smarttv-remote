@@ -65,6 +65,7 @@
     .handset input:not([type="range"]) { min-height: 3.5rem; }
     #install-steps { display: grid; gap: .375rem; margin: 0; padding-inline-start: 1.25rem; color: var(--muted); font-size: .8125rem; line-height: 1.4; }
     #install-steps:empty { display: none; }
+    #install-dialog:has(#install-confirm:not([hidden])) #install-steps { display: none; }
     #install-dialog .dialog-actions { grid-template-columns: minmax(0, 1fr); }
     @media (max-width: 344px) { .transport-row { gap: .625rem; margin-inline: -.375rem; } }
     @media (max-width: 320px) { .transport-row { overflow-x: auto; } }
@@ -208,6 +209,7 @@
       <p id="install-copy">Install the remote as an app for a full-screen control panel.</p>
       <ol id="install-steps"></ol>
       <div class="dialog-actions">
+        <button class="primary" type="button" id="install-confirm" hidden>Install app</button>
         <button type="button" id="install-open" hidden>Open secure remote</button>
         <button class="primary" value="close">Done</button>
       </div>
@@ -265,8 +267,8 @@
     </form>
   </dialog>
 
-  <script src="/smarttv-remote/hosted-55b809de5e47e24d.js"></script>
+  <script src="/smarttv-remote/hosted-4cbecf3edb33fba5.js"></script>
   <script src="/smarttv-remote/remote/assets/16a0f88554396a8f/touchpad.js"></script>
-  <script src="/smarttv-remote/remote/assets/f9c4a0f6eb221131/remote.js"></script>
+  <script src="/smarttv-remote/remote/assets/16a8e63e0b20bbfe/remote.js"></script>
 </body>
 </html>
