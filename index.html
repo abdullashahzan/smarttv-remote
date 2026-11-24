@@ -31,12 +31,13 @@
     .input-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
     .input-modes:has(#cursor-mode:not([hidden])) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .input-modes button { border-radius: .875rem; }
-    .nav-input { margin: 0; min-height: calc(16.25rem + 2 * var(--gap)); align-items: stretch; }
+    .nav-input { margin: 0; min-height: calc(17.25rem + 2 * var(--gap)); align-items: stretch; }
     .nav-input::before { content: none; }
     .nav-input > :is(.dpad, #touchpad-surface) { grid-area: 1 / 1; transition: none; }
-    .dpad { width: min(100%, 21rem); aspect-ratio: auto; grid-template: 5rem 6.25rem 5rem / 1fr 6.25rem 1fr; gap: var(--gap); }
+    .remote-tools { display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); }
+    .dpad { width: min(100%, 21rem); aspect-ratio: auto; grid-template: 5.5rem 6.25rem 5.5rem / 1fr 6.25rem 1fr; gap: var(--gap); }
     .handset .dpad button:active { transform: none; }
-    .handset .dpad [data-key], .handset .dpad [data-key]:active { width: 5rem; height: 5rem; touch-action: manipulation; box-shadow: none; background: linear-gradient(var(--red), var(--arrow-end, #5c0011)); }
+    .handset .dpad [data-key], .handset .dpad [data-key]:active { width: 5.5rem; height: 5.5rem; border-radius:50%; touch-action: manipulation; box-shadow: none; background: linear-gradient(var(--red), var(--arrow-end, #5c0011)); }
     .handset .dpad .ok-key { width: 6.25rem; height: 6.25rem; box-shadow: none; }
     .dpad [data-key="left"] { justify-self: end; }
     .dpad [data-key="right"] { justify-self: start; }
@@ -46,7 +47,7 @@
     .remote-top, .volume-controls { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .handset .remote-top .key { min-height: 4rem; }
     .transport-row { grid-template-columns: repeat(2, minmax(3.5rem, 1fr)) minmax(4.5rem, 1.65fr) repeat(2, minmax(3.5rem, 1fr)); align-items: center; }
-    .handset #play, .handset .volume-controls button { min-height: clamp(3.5rem, calc((100dvh - var(--top) - var(--bottom) - 41rem) / 2), 4.5rem); }
+    .handset #play, .handset .volume-controls button { min-height: clamp(3.5rem, calc((100dvh - var(--top) - var(--bottom) - 42rem) / 2), 4.5rem); }
     .volume-controls { display: grid; gap: var(--gap); }
     .volume-controls button { flex-direction: column; gap: .125rem; font-size: .75rem; }
     #volume-level { display: block; margin-block-end: .125rem; color: var(--muted); font-size: .75rem; text-align: center; font-variant-numeric: tabular-nums; }
@@ -70,7 +71,7 @@
     #install-dialog .dialog-actions { grid-template-columns: minmax(0, 1fr); }
     @media (max-width: 344px) { .transport-row { gap: .625rem; margin-inline: -.375rem; } }
     @media (max-width: 320px) { .transport-row { overflow-x: auto; } }
-    @media (orientation: landscape) and (min-width: 560px) and (max-height: 540px) { #open-more { grid-area: more; } }
+    @media (orientation: landscape) and (min-width: 560px) and (max-height: 540px) { .remote-tools { grid-area: more; } }
     @media (prefers-reduced-motion: reduce) { .handset button { transition: none; } }
   </style>
   <title>smartTV Remote</title>
@@ -156,7 +157,7 @@
       </div>
       <div class="remote-top control-row" role="group" aria-label="Quick controls">
         <button class="key" type="button" id="back"><svg class="icon" aria-hidden="true"><use href="#i-back"/></svg><span>Back</span></button>
-        <button class="key" data-cmd="home"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg><span>Home</span></button>
+        <button class="key" data-cmd="home"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg><span>Hold for Home</span></button>
         <button class="key" data-cmd="fullscreen"><svg class="icon" aria-hidden="true"><use href="#i-full"/></svg><span>Full screen</span></button>
       </div>
     </section>
@@ -170,15 +171,17 @@
         <button class="key" data-cmd="next" aria-label="Next video"><svg class="icon" aria-hidden="true"><use href="#i-next"/></svg></button>
       </div>
       <div class="sound-row" role="group" aria-label="Volume">
-        <span id="volume-level" aria-live="polite">Volume</span>
         <div class="volume-controls">
           <button data-volume="-1" aria-label="Volume down"><svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg><span>Vol down</span></button>
-          <button class="key" id="mute" type="button" data-cmd="mute" aria-label="Mute" aria-pressed="false" title="Mute" disabled><svg class="icon" aria-hidden="true"><use href="#i-volume"/></svg><span>Mute</span></button>
+          <button class="key" id="mute" type="button" data-cmd="mute" aria-label="Mute" aria-pressed="false" title="Mute" disabled><svg class="icon" aria-hidden="true"><use href="#i-volume"/></svg><span id="volume-level" aria-live="polite">Volume</span></button>
           <button data-volume="1" aria-label="Volume up"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg><span>Vol up</span></button>
         </div>
       </div>
     </section>
+    <div class="remote-tools more-controls">
+        <button type="button" id="open-discover" aria-haspopup="dialog" aria-controls="discover-dialog"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Search movies &amp; TV</button>
     <button type="button" id="open-more" aria-haspopup="dialog" aria-controls="more-sheet"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg>More</button>
+    </div>
   </main>
   </div>
 
@@ -186,7 +189,6 @@
       <header class="sheet-header"><h2 id="more-title">More</h2><button type="button" aria-label="Close more controls" data-close-dialog autofocus><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></header>
       <div class="player-actions">
         <button type="button" id="open-link" aria-haspopup="dialog" aria-controls="link-dialog"><svg class="icon" aria-hidden="true"><use href="#i-link"/></svg>Open link</button>
-        <button type="button" id="open-discover" aria-haspopup="dialog" aria-controls="discover-dialog"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Search movies &amp; TV</button>
         <button type="button" id="bookmark-page" data-cmd="bookmark_current" title="Save the exact webpage open on the TV" disabled><svg class="icon" aria-hidden="true"><use href="#i-bookmark"/></svg>Bookmark page</button>
         <button type="button" id="reload-page" data-cmd="site_reload" disabled><svg class="icon" aria-hidden="true"><use href="#i-reload"/></svg>Reload page</button>
         <button type="button" id="open-zoom" aria-haspopup="dialog" aria-controls="zoom-dialog" hidden><svg class="icon" aria-hidden="true"><use href="#i-zoom"/></svg>Zoom</button>
@@ -279,6 +281,6 @@
 
   <script src="/smarttv-remote/hosted-4cbecf3edb33fba5.js"></script>
   <script src="/smarttv-remote/remote/assets/16a0f88554396a8f/touchpad.js"></script>
-  <script src="/smarttv-remote/remote/assets/96e8fa7fbcafc7b1/remote.js"></script>
+  <script src="/smarttv-remote/remote/assets/3bf1dc5ccf3babe6/remote.js"></script>
 </body>
 </html>
