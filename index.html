@@ -12,7 +12,7 @@
   <link rel="icon" href="/smarttv-remote/static/art/smarttv.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/smarttv-remote/static/art/smarttv-192.png">
   <link rel="manifest" href="/smarttv-remote/manifest.webmanifest">
-  <link rel="stylesheet" href="/smarttv-remote/remote/assets/4616dd6155659562/handset.css">
+  <link rel="stylesheet" href="/smarttv-remote/remote/assets/175234039fac2237/handset.css">
   <link rel="stylesheet" href="/smarttv-remote/remote/assets/d07bec01e3b07ac6/themes.css">
   <meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src http: 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'">
   <style>
@@ -271,6 +271,12 @@
       <div class="dialog-actions"><button class="primary" type="submit" value="search">Search</button><button type="submit" value="clear" formnovalidate>Clear search</button></div>
     </form>
   </dialog>
+  <dialog id="restart-progress" aria-labelledby="restart-progress-title" aria-describedby="restart-progress-description">
+    <span class="restart-spinner" aria-hidden="true"></span>
+    <h2 id="restart-progress-title">Restarting smartTV…</h2>
+    <p id="restart-progress-description">Checking for updates and restarting the service. Your remote will reconnect automatically.</p>
+    <button type="button" data-close-dialog>Dismiss</button>
+  </dialog>
   <dialog id="restart-dialog" aria-labelledby="restart-title" aria-describedby="restart-description">
     <form id="restart-form">
       <h2 id="restart-title">Restart service?</h2>
@@ -281,6 +287,6 @@
 
   <script src="/smarttv-remote/hosted-4cbecf3edb33fba5.js"></script>
   <script src="/smarttv-remote/remote/assets/16a0f88554396a8f/touchpad.js"></script>
-  <script src="/smarttv-remote/remote/assets/3bf1dc5ccf3babe6/remote.js"></script>
+  <script src="/smarttv-remote/remote/assets/f1ee4e0b5e2cda8b/remote.js"></script>
 </body>
 </html>

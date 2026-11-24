@@ -1,6 +1,6 @@
 const root = "/smarttv-remote/";
-const version = 'smarttv-phone-c6bffcca76bc924a';
-const assets = new Set(["/smarttv-remote/remote/assets/3bf1dc5ccf3babe6/remote.js", "/smarttv-remote/remote/assets/16a0f88554396a8f/touchpad.js", "/smarttv-remote/remote/assets/4616dd6155659562/handset.css", "/smarttv-remote/remote/assets/d07bec01e3b07ac6/themes.css", "/smarttv-remote/hosted-4cbecf3edb33fba5.js", "/smarttv-remote/static/art/smarttv-192.png", "/smarttv-remote/static/art/smarttv-512.png", "/smarttv-remote/static/art/smarttv-maskable.png", "/smarttv-remote/static/art/smarttv.svg", "/smarttv-remote/manifest.webmanifest", "/smarttv-remote/"]);
+const version = 'smarttv-phone-1716cf801f28c1f6';
+const assets = new Set(["/smarttv-remote/remote/assets/f1ee4e0b5e2cda8b/remote.js", "/smarttv-remote/remote/assets/16a0f88554396a8f/touchpad.js", "/smarttv-remote/remote/assets/175234039fac2237/handset.css", "/smarttv-remote/remote/assets/d07bec01e3b07ac6/themes.css", "/smarttv-remote/hosted-4cbecf3edb33fba5.js", "/smarttv-remote/static/art/smarttv-192.png", "/smarttv-remote/static/art/smarttv-512.png", "/smarttv-remote/static/art/smarttv-maskable.png", "/smarttv-remote/static/art/smarttv.svg", "/smarttv-remote/manifest.webmanifest", "/smarttv-remote/"]);
 self.addEventListener('install', event => event.waitUntil((async () => {
   await (await caches.open(version)).addAll([...assets]);
   await self.skipWaiting();
